@@ -8,10 +8,10 @@ Serve openapi yaml file from a http server, by using [kin-openapi](https://githu
 go-openapi-serve [port] ([path1] [path2]...)
 ```
 
-If the path points to a folder, the yaml files in that folder will be served. However, it currently doesn't 
+If the path points to a folder, the yaml files in that folder will be served.
 If the path points to a file, the corresponding file will be served.
 
-For now, this tool not support:
+For now, this tool does not support:
 
 - Absolute path to file or folder.
 - `..` in relative path to file or folder.
