@@ -19,7 +19,7 @@ For now, this tool does not support:
 
 ## Examples
 
-Serve yaml files under `./docs`
+Serve yaml files under `./docs` through port 8080:
 
 ```bash
 go-openapi-serve 8080
