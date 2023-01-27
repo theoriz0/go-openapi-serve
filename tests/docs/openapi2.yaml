@@ -1,0 +1,332 @@
+openapi: 3.0.3
+info:
+  title: SMS - OpenAPI 3.0
+  description: |-
+    This is a SMS Service Management Server based on the OpenAPI 3.0 specification.
+  version: "0.0.1"
+servers:
+  - url: https://localhost:8080/api/v1
+    description: development server
+tags:
+  - name: platform
+    description: Manage SMS platforms
+paths:
+  /platform:
+    put:
+      tags:
+        - platform
+      summary: Update an existing platform
+      description: Update an existing platform by Id
+      operationId: updatePlatform
+      requestBody:
+        description: Update an existent platform in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePlatformRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: request failed due to client-side problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrResponse'
+        '500':
+          description: request failed due to server-side problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrResponse'
+    post:
+      tags:
+        - platform
+      summary: Add a new platform to the database
+      description: Add a new platform to the database
+      operationId: addPlatform
+      requestBody:
+        description: Create a new platform in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddPlatformRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddPlatformResponse'
+        '400':
+          description: request failed due to client-side problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrResponse'
+        '500':
+          description: request failed due to server-side problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrResponse'
+  /platform/{platformId}:
+    get:
+      tags:
+        - platform
+      summary: Find platform by ID
+      description: Returns a single platform
+      operationId: getPlatformById
+      parameters:
+        - name: platformId
+          in: path
+          description: ID of platform to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformInfo'
+        '400':
+          description: request failed due to client-side problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrResponse'
+        '500':
+          description: request failed due to server-side problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrResponse'
+    delete:
+      tags:
+        - platform
+      summary: Deletes a platform
+      description: delete a platform
+      operationId: deletePlatform
+      parameters:
+        - name: platformId
+          in: path
+          description: Platform id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: request failed due to client-side problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrResponse'
+        '500':
+          description: request failed due to server-side problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrResponse'
+  /platforms:
+    get:
+      tags:
+        - platform
+      summary: Find platforms by pagination
+      description: Returns list of platforms
+      operationId: getPlatforms
+      parameters:
+        - name: page
+          in: query
+          description: page number
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: cap
+          in: query
+          description: number of platforms per page
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPlatformListResponse'
+        '400':
+          description: request failed due to client-side problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrResponse'
+        '500':
+          description: request failed due to server-side problem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrResponse'
+components:
+  schemas:
+    UpdatePlatformRequest:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: aliyun
+        access_key_id:
+          type: string
+          example: someAccessKeyId
+        access_key_secret:
+          type: string
+          example: someAccessKeySecret
+        ip_addr:
+          type: string
+          example: 192.168.1.1
+        need_auth:
+          type: boolean
+          example: true
+        is_active:
+          type: boolean
+          example: false
+        remark:
+          type: string
+          example: some remark about the platform
+        level:
+          type: integer
+          example: 1
+    AddPlatformRequest:
+      required:
+        - name
+        - access_key_id
+        - access_key_secret
+        - ip_addr
+        - need_auth
+        - is_active
+      type: object
+      properties:
+        name:
+          type: string
+          example: aliyun
+        access_key_id:
+          type: string
+          example: someAccessKeyId
+        access_key_secret:
+          type: string
+          example: someAccessKeySecret
+        ip_addr:
+          type: string
+          example: 192.168.1.1
+        need_auth:
+          type: boolean
+          example: true
+        is_active:
+          type: boolean
+          example: false
+        remark:
+          type: string
+          example: some remark about the platform
+        level:
+          type: integer
+          example: 1
+    AddPlatformResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+    GetPlatformListResponse:
+      type: object
+      properties:
+        totalCount:
+            type: integer
+            format: int64
+            example: 3
+        platforms:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformInfo'
+    PlatformInfo:
+      required:
+        - name
+        - access_key_id
+        - access_key_secret
+        - ip_addr
+        - need_auth
+        - is_active
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: aliyun
+        access_key_id:
+          type: string
+          example: someAccessKeyId
+        access_key_secret:
+          type: string
+          example: someAccessKeySecret
+        ip_addr:
+          type: string
+          example: 192.168.1.1
+        need_auth:
+          type: boolean
+          example: true
+        is_active:
+          type: boolean
+          example: false
+        remark:
+          type: string
+          example: some remark about the platform
+        level:
+          type: integer
+          example: 1
+        create_time:
+          type: string
+          format: date-time
+          example: 2022-02-02 02:02:02
+        create_user:
+          $ref: '#/components/schemas/User'
+        update_time:
+          type: string
+          format: date-time
+          example: 2022-02-02 02:02:02
+        update_user:
+          $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+          example: daniel
+    ErrResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int64
+          example: 10001/20002
+        message:
+          type: string
+          example: "Internal server error./Validation failed."
+

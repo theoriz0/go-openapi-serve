@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OpenApi Links</title>
+</head>
+<html>
+	<h3>
+		OpenApi Links
+	</h3>
+
+    <ul>
+
+    {{ range $key, $value := . }}
+       <li><a href="{{ $value }}">{{ $key }}</a></li>
+    {{ end }}
+
+    </ul>
+</html>
