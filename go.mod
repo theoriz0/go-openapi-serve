@@ -1,4 +1,4 @@
-module go-openapi-serve
+module github.com/theoriz0/go-openapi-serve
 
 go 1.19
 
