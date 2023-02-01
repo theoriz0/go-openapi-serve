@@ -61,7 +61,7 @@ func main() {
 	for ypath, filename := range yamlpaths {
 		doc, _ := loader.LoadFromFile(ypath)
 		http.HandleFunc("/"+filename+".json", serveJSON(doc))
-		http.HandleFunc("/"+filename, servePage(filename))
+		http.HandleFunc("/"+filename, servePage(addr, filename))
 	}
 	http.HandleFunc("/", serveIndex(yamlpaths))
 
@@ -121,7 +121,7 @@ func serveJSON(doc *openapi3.T) http.HandlerFunc {
 	}
 }
 
-func servePage(filename string) http.HandlerFunc {
+func servePage(port string, filename string) http.HandlerFunc {
 	t, err := template.ParseFS(tmplFiles, "template/openapi.tmpl")
 	if err != nil {
 		log.Print(err)
@@ -129,7 +129,7 @@ func servePage(filename string) http.HandlerFunc {
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
-		t.Execute(w, filename)
+		t.Execute(w, port+"/"+filename)
 	}
 }
 
