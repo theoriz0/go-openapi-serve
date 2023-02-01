@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"github.com/getkin/kin-openapi/openapi3"
 	"html/template"
@@ -12,6 +13,11 @@ import (
 )
 
 type yamlMap map[string]string
+
+var (
+	//go:embed template/*
+	tmplFiles embed.FS
+)
 
 func main() {
 	var inputPaths []string
@@ -68,7 +74,7 @@ func main() {
 
 func serveIndex(yamlpaths yamlMap) http.HandlerFunc {
 
-	t, err := template.ParseFiles("template/index.tmpl")
+	t, err := template.ParseFS(tmplFiles, "template/index.tmpl")
 	if err != nil {
 		log.Print(err)
 		return serverError
@@ -116,7 +122,7 @@ func serveJSON(doc *openapi3.T) http.HandlerFunc {
 }
 
 func servePage(filename string) http.HandlerFunc {
-	t, err := template.ParseFiles("template/openapi.tmpl")
+	t, err := template.ParseFS(tmplFiles, "template/openapi.tmpl")
 	if err != nil {
 		log.Print(err)
 		return serverError
